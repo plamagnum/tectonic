@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Адмін-панель — Тектоніка України</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<!-- ===================== НАВІГАЦІЯ ===================== -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="index.html">🌍 <span>Тектоніка</span> України</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="index.html">← До сайту</a>
+      <button class="theme-toggle" id="theme-toggle" title="Змінити тему">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== ЗАГОЛОВОК ===================== -->
+<div class="container" style="padding-top:1.5rem">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+    <h1 style="font-size:1.6rem">⚙️ Панель адміністратора</h1>
+    <div style="font-size:.85rem;color:var(--text-secondary)">
+      Управління даними системи
+    </div>
+  </div>
+
+  <!-- Повідомлення -->
+  <div id="admin-users-msg"></div>
+  <div id="admin-plates-msg"></div>
+
+  <!-- ===================== ВКЛАДКИ ===================== -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-users">👥 Користувачі</button>
+    <button class="tab-btn"        data-tab="tab-plates">🗺️ Тектонічні плити</button>
+  </div>
+
+  <!-- ── Вкладка: Користувачі ── -->
+  <div class="tab-pane active" id="tab-users">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+      <button class="btn btn-primary" id="btn-new-user">+ Додати користувача</button>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ім'я</th>
+              <th>Email</th>
+              <th>Роль</th>
+              <th>Дії</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="5" class="loading-text"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Вкладка: Плити ── -->
+  <div class="tab-pane" id="tab-plates">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+      <button class="btn btn-primary" id="btn-new-plate">+ Додати плиту</button>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Назва</th>
+              <th>Опис</th>
+              <th>Дії</th>
+            </tr>
+          </thead>
+          <tbody id="plates-tbody">
+            <tr><td colspan="4" class="loading-text"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== МОДАЛЬНЕ: КОРИСТУВАЧ ===================== -->
+<div class="modal-overlay" id="user-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="u-modal-title">Користувач</span>
+      <button class="modal-close" data-close-modal>×</button>
+    </div>
+    <div class="modal-body">
+      <form id="user-form" novalidate>
+        <input type="hidden" id="u-id" />
+        <div class="form-group">
+          <label class="form-label">Ім'я</label>
+          <input class="form-control" id="u-name" type="text" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-control" id="u-email" type="email" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Пароль <small>(залиште порожнім для збереження поточного)</small></label>
+          <input class="form-control" id="u-password" type="password" placeholder="••••••" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Роль</label>
+          <select class="form-control" id="u-role">
+            <option value="user">Користувач</option>
+            <option value="admin">Адміністратор</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Скасувати</button>
+      <button class="btn btn-primary"   id="btn-save-user">Зберегти</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== МОДАЛЬНЕ: ПЛИТА ===================== -->
+<div class="modal-overlay" id="plate-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="p-modal-title">Тектонічна плита</span>
+      <button class="modal-close" data-close-modal>×</button>
+    </div>
+    <div class="modal-body">
+      <form id="plate-form" novalidate>
+        <input type="hidden" id="p-id" />
+        <div class="form-group">
+          <label class="form-label">Назва</label>
+          <input class="form-control" id="p-name" type="text" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Опис</label>
+          <textarea class="form-control" id="p-description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Колір</label>
+          <input class="form-control" id="p-color" type="color" value="#3388ff" style="height:42px;cursor:pointer" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">GeoJSON <small>(Feature із Polygon)</small></label>
+          <textarea class="form-control" id="p-geojson" rows="8" style="font-family:monospace;font-size:.8rem"
+            placeholder='{"type":"Feature","properties":{"name":"..."},"geometry":{"type":"Polygon","coordinates":[[[lng,lat],...]]}}'>
+          </textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Скасувати</button>
+      <button class="btn btn-primary"   id="btn-save-plate">Зберегти</button>
+    </div>
+  </div>
+</div>
+
+<!-- Скрипти -->
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

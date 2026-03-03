@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Тектоніка України — навчальна гра</title>
+  <meta name="description" content="Інтерактивна карта для вивчення тектонічних структур України" />
+
+  <!-- Leaflet.js для відображення карти -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Власні стилі -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<!-- ===================== НАВІГАЦІЯ ===================== -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="#" data-section="home">
+      🌍 <span>Тектоніка</span> України
+    </a>
+    <div class="navbar-nav">
+      <a class="nav-link" data-section="home"    href="#">Головна</a>
+      <a class="nav-link" data-section="game"    href="#">Гра</a>
+      <a class="nav-link" data-section="results" href="#">Результати</a>
+      <a class="nav-link" data-section="profile" href="#" id="nav-profile" style="display:none">Профіль</a>
+
+      <!-- Відображається тільки для авторизованих -->
+      <span id="nav-user-info" style="font-size:.85rem;color:var(--text-secondary);padding:0 .5rem"></span>
+      <a class="btn btn-secondary btn-sm" data-section="login"    href="#" id="nav-login">Увійти</a>
+      <a class="btn btn-primary  btn-sm" data-section="register" href="#" id="nav-register">Реєстрація</a>
+      <button class="btn btn-danger  btn-sm" id="nav-logout" style="display:none">Вийти</button>
+      <a class="btn btn-secondary btn-sm" href="admin.html" id="nav-admin" style="display:none">⚙️ Адмін</a>
+
+      <!-- Перемикач теми -->
+      <button class="theme-toggle" id="theme-toggle" title="Змінити тему">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== ГОЛОВНА СТОРІНКА ===================== -->
+<div class="section active" id="section-home">
+  <div class="container" style="padding-top:3rem;text-align:center">
+    <h1 style="font-size:2.5rem;margin-bottom:1rem">🌍 Тектоніка України</h1>
+    <p style="font-size:1.1rem;color:var(--text-secondary);max-width:600px;margin:0 auto 2rem">
+      Інтерактивна навчальна гра для вивчення тектонічних структур України.
+      Знаходьте плити на карті та перевіряйте свої знання з геології.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary btn-lg" data-section="game" href="#">▶ Почати гру</a>
+      <a class="btn btn-secondary btn-lg" data-section="register" href="#">Зареєструватись</a>
+    </div>
+    <div style="margin-top:3rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;max-width:800px;margin:3rem auto 0">
+      <div class="card card-body" style="text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">🗺️</div>
+        <strong>Інтерактивна карта</strong>
+        <p style="font-size:.85rem;color:var(--text-secondary);margin-top:.3rem">8 тектонічних структур України на карті Leaflet</p>
+      </div>
+      <div class="card card-body" style="text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">🎯</div>
+        <strong>Ігровий режим</strong>
+        <p style="font-size:.85rem;color:var(--text-secondary);margin-top:.3rem">Вгадуйте плити та відстежуйте свій прогрес</p>
+      </div>
+      <div class="card card-body" style="text-align:center">
+        <div style="font-size:2rem;margin-bottom:.5rem">📊</div>
+        <strong>Статистика</strong>
+        <p style="font-size:.85rem;color:var(--text-secondary);margin-top:.3rem">Докладні результати та аналітика по кожній плиті</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ВХІД ===================== -->
+<div class="section" id="section-login">
+  <div class="auth-wrapper">
+    <div class="auth-card card">
+      <div class="card-header">🔐 Вхід до системи</div>
+      <div class="card-body">
+        <div id="login-msg"></div>
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email</label>
+            <input class="form-control" id="login-email" name="email" type="email" placeholder="admin@tectonic.ua" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Пароль</label>
+            <input class="form-control" id="login-password" name="password" type="password" placeholder="••••••" required />
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" type="submit">Увійти</button>
+        </form>
+        <p style="text-align:center;margin-top:1rem;font-size:.9rem;color:var(--text-secondary)">
+          Немає акаунту? <a data-section="register" href="#">Зареєструватися</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== РЕЄСТРАЦІЯ ===================== -->
+<div class="section" id="section-register">
+  <div class="auth-wrapper">
+    <div class="auth-card card">
+      <div class="card-header">✏️ Реєстрація</div>
+      <div class="card-body">
+        <div id="register-msg"></div>
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Ім'я</label>
+            <input class="form-control" id="reg-name" name="name" type="text" placeholder="Ваше ім'я" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email</label>
+            <input class="form-control" id="reg-email" name="email" type="email" placeholder="example@mail.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Пароль <small>(мін. 6 символів)</small></label>
+            <input class="form-control" id="reg-password" name="password" type="password" placeholder="••••••" required />
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" type="submit">Зареєструватися</button>
+        </form>
+        <p style="text-align:center;margin-top:1rem;font-size:.9rem;color:var(--text-secondary)">
+          Вже маєте акаунт? <a data-section="login" href="#">Увійти</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ГРА ===================== -->
+<div class="section" id="section-game">
+  <div class="container">
+    <h2 style="margin-bottom:1rem">🎯 Визначте тектонічну плиту</h2>
+
+    <!-- Ігрова панель із питанням -->
+    <div class="game-panel">
+      <div>
+        <div class="game-question" id="game-question-text">Завантаження плит…</div>
+        <div class="game-hint" style="margin-top:.3rem">Клікніть на полігон відповідної плити на карті</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;align-items:flex-end">
+        <div class="score-display" id="game-score">Правильно: <strong>0</strong> / <strong>0</strong></div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn btn-secondary btn-sm" id="btn-reset-score">↺ Скинути</button>
+          <button class="btn btn-primary  btn-sm" id="btn-next" style="display:none">Наступне →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Блок пояснення після відповіді -->
+    <div class="answer-feedback" id="answer-feedback"></div>
+
+    <!-- Карта Leaflet -->
+    <div class="map-wrapper">
+      <div id="map"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== РЕЗУЛЬТАТИ ===================== -->
+<div class="section" id="section-results">
+  <div class="container">
+    <h2 style="margin-bottom:1.5rem">📊 Мої результати</h2>
+    <div id="results-content">
+      <div class="loading-text"><div class="spinner"></div> Завантаження…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ПРОФІЛЬ ===================== -->
+<div class="section" id="section-profile">
+  <div class="container" style="max-width:600px">
+    <h2 style="margin-bottom:1.5rem">👤 Мій профіль</h2>
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-header">Інформація</div>
+      <div class="card-body">
+        <table style="width:100%">
+          <tbody>
+            <tr><td style="width:40%;color:var(--text-secondary);padding:.5rem 0">Ім'я</td><td id="profile-name-display">—</td></tr>
+            <tr><td style="color:var(--text-secondary);padding:.5rem 0">Email</td><td id="profile-email-display">—</td></tr>
+            <tr><td style="color:var(--text-secondary);padding:.5rem 0">Роль</td><td id="profile-role-display">—</td></tr>
+            <tr><td style="color:var(--text-secondary);padding:.5rem 0">З нами від</td><td id="profile-since-display">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">Змінити дані</div>
+      <div class="card-body">
+        <div id="profile-msg"></div>
+        <form id="profile-form">
+          <div class="form-group">
+            <label class="form-label">Ім'я</label>
+            <input class="form-control" id="profile-form-name" type="text" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Новий пароль <small>(залиште порожнім, щоб не змінювати)</small></label>
+            <input class="form-control" id="profile-form-password" type="password" placeholder="••••••" />
+          </div>
+          <button class="btn btn-primary" type="submit">Зберегти</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Власні скрипти (порядок важливий) -->
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/map.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

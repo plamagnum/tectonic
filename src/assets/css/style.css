@@ -1,0 +1,514 @@
+/* =====================================================
+   Головний файл стилів — Тектоніка України
+   Підтримує світлу та темну теми через CSS-змінні
+   ===================================================== */
+
+/* --- Кастомні властивості для тем --- */
+:root {
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f4f6f9;
+  --bg-card:       #ffffff;
+  --text-primary:  #1a1a2e;
+  --text-secondary:#555e6d;
+  --border-color:  #dee2e6;
+  --accent:        #2563eb;
+  --accent-hover:  #1d4ed8;
+  --success:       #16a34a;
+  --danger:        #dc2626;
+  --warning:       #d97706;
+  --shadow:        0 2px 12px rgba(0,0,0,.08);
+  --radius:        10px;
+  --transition:    .25s ease;
+}
+
+[data-theme="dark"] {
+  --bg-primary:    #0f172a;
+  --bg-secondary:  #1e293b;
+  --bg-card:       #1e293b;
+  --text-primary:  #f1f5f9;
+  --text-secondary:#94a3b8;
+  --border-color:  #334155;
+  --accent:        #3b82f6;
+  --accent-hover:  #2563eb;
+  --shadow:        0 2px 12px rgba(0,0,0,.4);
+}
+
+/* --- Скидання та базові стилі --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background var(--transition), color var(--transition);
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Навігація --- */
+.navbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: .75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.navbar-brand span { color: var(--text-primary); }
+
+.navbar-nav {
+  display: flex;
+  gap: .5rem;
+  margin-left: auto;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  padding: .4rem .85rem;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: .9rem;
+  transition: color var(--transition), background var(--transition);
+  cursor: pointer;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--accent);
+  background: var(--bg-secondary);
+  text-decoration: none;
+}
+
+/* --- Кнопки --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), transform .1s, box-shadow var(--transition);
+  text-decoration: none;
+}
+
+.btn:active { transform: scale(.97); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+.btn-secondary:hover { background: var(--border-color); text-decoration: none; }
+
+.btn-danger  { background: var(--danger);  color: #fff; }
+.btn-danger:hover { background: #b91c1c; text-decoration: none; }
+
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #15803d; text-decoration: none; }
+
+.btn-sm { padding: .3rem .75rem; font-size: .8rem; }
+.btn-lg { padding: .75rem 2rem;  font-size: 1rem;  }
+.btn-block { width: 100%; justify-content: center; }
+
+/* --- Тема-перемикач --- */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), border-color var(--transition);
+}
+.theme-toggle:hover { background: var(--bg-secondary); }
+
+/* --- Контейнер сторінки --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* --- Картки --- */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: var(--bg-secondary);
+}
+
+.card-body { padding: 1.5rem; }
+
+/* --- Секції --- */
+.section { display: none; }
+.section.active { display: block; }
+
+/* --- Форми --- */
+.form-group { margin-bottom: 1rem; }
+
+.form-label {
+  display: block;
+  margin-bottom: .4rem;
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-control {
+  width: 100%;
+  padding: .55rem .9rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: .9rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+select.form-control { appearance: none; cursor: pointer; }
+textarea.form-control { resize: vertical; min-height: 80px; }
+
+/* --- Повідомлення --- */
+.alert {
+  padding: .75rem 1rem;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  margin-bottom: 1rem;
+}
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.alert-danger  { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.alert-info    { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+[data-theme="dark"] .alert-success { background: #14532d; color: #86efac; border-color: #166534; }
+[data-theme="dark"] .alert-danger  { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
+[data-theme="dark"] .alert-info    { background: #1e3a5f; color: #93c5fd; border-color: #1e40af; }
+
+/* --- Карта --- */
+#map {
+  width: 100%;
+  height: 520px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  z-index: 0;
+}
+
+.map-wrapper { position: relative; }
+
+/* --- Ігрова панель --- */
+.game-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.game-question {
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.game-question span {
+  color: var(--accent);
+}
+
+.game-hint {
+  font-size: .85rem;
+  color: var(--text-secondary);
+}
+
+/* Підказка після відповіді */
+.answer-feedback {
+  display: none;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  margin-top: .75rem;
+  font-size: .95rem;
+  line-height: 1.6;
+}
+.answer-feedback.correct { background: #dcfce7; color: #166534; border-left: 4px solid var(--success); }
+.answer-feedback.wrong   { background: #fee2e2; color: #991b1b; border-left: 4px solid var(--danger); }
+[data-theme="dark"] .answer-feedback.correct { background: #14532d; color: #86efac; }
+[data-theme="dark"] .answer-feedback.wrong   { background: #7f1d1d; color: #fca5a5; }
+
+/* --- Таблиці --- */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+
+thead th {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: .78rem;
+  letter-spacing: .05em;
+  padding: .7rem 1rem;
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: .7rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--bg-secondary); }
+
+/* --- Значки --- */
+.badge {
+  display: inline-block;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+}
+.badge-success { background: #dcfce7; color: #166534; }
+.badge-danger  { background: #fee2e2; color: #991b1b; }
+.badge-info    { background: #dbeafe; color: #1e40af; }
+.badge-warning { background: #fef3c7; color: #92400e; }
+[data-theme="dark"] .badge-success { background: #14532d; color: #86efac; }
+[data-theme="dark"] .badge-danger  { background: #7f1d1d; color: #fca5a5; }
+[data-theme="dark"] .badge-info    { background: #1e3a5f; color: #93c5fd; }
+[data-theme="dark"] .badge-warning { background: #451a03; color: #fcd34d; }
+
+/* --- Статистичні картки --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  transition: background var(--transition);
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  font-size: .8rem;
+  color: var(--text-secondary);
+  margin-top: .3rem;
+}
+
+/* --- Авторизаційні форми --- */
+.auth-wrapper {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-card .card-header {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+/* --- Модальне вікно --- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  margin: 1rem;
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.modal-body { padding: 1.5rem; }
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: .75rem;
+  justify-content: flex-end;
+}
+
+/* --- Завантаження --- */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+/* --- Вкладки --- */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: .6rem 1.2rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  font-size: .9rem;
+  color: var(--text-secondary);
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.tab-btn.active, .tab-btn:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* --- Сітка результатів --- */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .results-grid { grid-template-columns: 1fr; }
+  .navbar-inner { padding: .6rem 1rem; }
+  #map { height: 360px; }
+  .game-panel { flex-direction: column; align-items: flex-start; }
+}
+
+/* --- Повідомлення у грі --- */
+.score-display {
+  font-size: .9rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 1rem;
+}
+
+.score-display strong { color: var(--text-primary); }
+
+/* --- Підсвітка плит на карті — CSS-класи Leaflet --- */
+.plate-label {
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: .75rem;
+  color: #222;
+  text-shadow: 1px 1px 2px #fff, -1px -1px 2px #fff;
+  pointer-events: none;
+  white-space: nowrap;
+}
