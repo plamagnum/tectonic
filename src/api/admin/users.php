@@ -80,8 +80,6 @@ switch ($method) {
             exit;
         }
         $input = json_decode(file_get_contents('php://input'), true);
-        // Явний білий список дозволених полів для запобігання SQL-ін'єкції
-        $allowed = ['name' => true, 'email' => true, 'role' => true, 'password' => true];
         $fields = [];
         $params = [];
 
@@ -95,8 +93,6 @@ switch ($method) {
             $fields[] = 'password = ?';
             $params[] = password_hash($input['password'], PASSWORD_DEFAULT);
         }
-
-        unset($allowed); // використано лише для документування наміру
 
         if (empty($fields)) {
             http_response_code(400);

@@ -1,4 +1,13 @@
 // Модуль карти — ігрова логіка з тектонічними плитами України
+
+// Безпечне екранування HTML для запобігання XSS
+function escHtmlMap(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 const MapModule = (() => {
   let map          = null;  // Екземпляр Leaflet-карти
   let plates       = [];    // Масив плит із бази даних
@@ -142,12 +151,12 @@ const MapModule = (() => {
       feedback.style.display = 'block';
       feedback.className     = `answer-feedback ${isCorrect ? 'correct' : 'wrong'}`;
       if (isCorrect) {
-        feedback.innerHTML = `✅ <strong>Правильно!</strong> Це дійсно <em>${currentPlate.name}</em>.<br>
-          <small>${currentPlate.description || ''}</small>`;
+        feedback.innerHTML = `✅ <strong>Правильно!</strong> Це дійсно <em>${escHtmlMap(currentPlate.name)}</em>.<br>
+          <small>${escHtmlMap(currentPlate.description || '')}</small>`;
       } else {
-        feedback.innerHTML = `❌ <strong>Неправильно.</strong> Ви обрали <em>${clickedPlate.name}</em>,
-          а правильна відповідь — <em>${currentPlate.name}</em>.<br>
-          <small>${currentPlate.description || ''}</small>`;
+        feedback.innerHTML = `❌ <strong>Неправильно.</strong> Ви обрали <em>${escHtmlMap(clickedPlate.name)}</em>,
+          а правильна відповідь — <em>${escHtmlMap(currentPlate.name)}</em>.<br>
+          <small>${escHtmlMap(currentPlate.description || '')}</small>`;
       }
     }
 

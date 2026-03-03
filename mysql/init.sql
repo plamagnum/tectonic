@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS attempts (
 
 -- =====================================================
 -- Початковий адміністратор (пароль: admin123)
+-- УВАГА: Змініть пароль адміністратора після першого входу!
 -- =====================================================
 INSERT INTO users (name, email, password, role) VALUES
 ('Адміністратор', 'admin@tectonic.ua', '$2y$10$jZnIv0YTa4rqwAdLWUg4UeLGBtIvxk7cH3jwwSP6ry/BK.r4OhhPW', 'admin');
