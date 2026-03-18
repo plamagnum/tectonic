@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-fpm
+    networks:
+      - tectonic-network
+
+  php-fpm:
+    build: .
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - DB_NAME=${MYSQL_DATABASE:-tectonic}
+      - DB_USER=${MYSQL_USER:-tectonic_user}
+      - DB_PASS=${MYSQL_PASSWORD:-tectonic_pass}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tectonic-network
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-tectonic}
+      MYSQL_USER: ${MYSQL_USER:-tectonic_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-tectonic_pass}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tectonic-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER:-tectonic_user}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-tectonic_pass}
+    depends_on:
+      - mysql
+    networks:
+      - tectonic-network
+
+volumes:
+  mysql_data:
+
+networks:
+  tectonic-network:
+    driver: bridge

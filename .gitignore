@@ -1,0 +1,7 @@
+# Виключення конфіденційних та тимчасових файлів
+.env
+vendor/
+node_modules/
+*.log
+mysql_data/
+.DS_Store
